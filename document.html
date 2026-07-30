@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Smart Document Print — ADP PrintFlow AI</title>
+<link rel="stylesheet" href="style.css">
+<link rel="stylesheet" href="tool.css">
+</head>
+<body>
+
+<nav class="navbar">
+  <div class="wrap">
+    <a class="brand" href="index.html">
+      <div class="mark">AI</div>
+      <span>ADP PrintFlow<span class="tag">.AI</span></span>
+    </a>
+    <div class="nav-links"><a href="index.html">← All tools</a></div>
+  </div>
+</nav>
+
+<div class="wrap">
+  <div class="tool-header">
+    <div class="tool-title"><div class="tool-icon">📄</div>Smart Document Print</div>
+    <p class="tool-desc">Upload any A4-size document. We auto-detect its edges, remove the background around it, straighten any tilt, sharpen the quality, and lay it out on a clean A4 page — ready to print.</p>
+  </div>
+
+  <div class="workspace">
+    <div>
+      <div class="panel glass">
+        <div class="panel-title">Step 1 · Upload document</div>
+        <div class="dropzone" id="dz-doc">
+          <input type="file" id="file-doc" accept="image/*">
+          <div class="dz-empty">
+            <div class="dz-icon">📄</div>
+            <div class="dz-label">Click or drop document photo</div>
+            <div class="dz-sub">JPG / PNG</div>
+          </div>
+        </div>
+        <button class="btn btn-ghost btn-sm btn-block" style="margin-top:8px;" id="cam-doc">📷 Use camera</button>
+      </div>
+
+      <div class="panel glass">
+        <div class="panel-title">Step 2 · Process</div>
+        <button class="btn btn-primary btn-block" id="btn-process" disabled>⚡ Auto-crop &amp; build A4</button>
+        <p class="footnote">Edges are detected automatically, tilt is corrected, and the document is centred on an A4 page.</p>
+      </div>
+    </div>
+
+    <div class="panel glass" style="padding:0;">
+      <div class="status-pill" id="status"><div class="status-dot"></div><span id="status-text">Waiting for a document…</span></div>
+      <div class="stage" id="stage">
+        <div class="stage-empty"><div class="se-icon">📄</div><div>Upload a document to see the live preview</div></div>
+      </div>
+      <div class="output-bar">
+        <button class="btn btn-ghost btn-sm" id="btn-jpg" disabled>⬇ Download JPG</button>
+        <button class="btn btn-ghost btn-sm" id="btn-pdf" disabled>⬇ Download PDF</button>
+        <button class="btn btn-primary btn-sm" id="btn-print" disabled>🖨 Print</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+<script src="core.js"></script>
+<script src="camera.js"></script>
+<script src="document-tool.js"></script>
+</body>
+</html>

@@ -1,0 +1,210 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ADP PrintFlow AI — Auto Crop, Straighten &amp; Print</title>
+<meta name="description" content="Upload any ID card, document or photo — ADP PrintFlow AI auto-crops, straightens and lays it out on A4, ready to print. 4 tools, fully in your browser, no login.">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><rect width=%22100%22 height=%22100%22 rx=%2222%22 fill=%22%234f7cff%22/></svg>">
+<link rel="stylesheet" href="style.css">
+<style>
+  .hero{ padding:76px 0 60px; position:relative; overflow:hidden; }
+  .hero-grid{ display:grid; grid-template-columns:1.1fr 0.9fr; gap:48px; align-items:center; }
+  @media (max-width:900px){ .hero-grid{ grid-template-columns:1fr; } }
+  .hero h1{ font-size:clamp(34px,5vw,54px); line-height:1.06; font-weight:800; margin-bottom:18px; }
+  .hero h1 .g{ background:var(--grad); -webkit-background-clip:text; background-clip:text; color:transparent; }
+  .hero p{ font-size:16.5px; color:var(--text-dim); max-width:520px; margin-bottom:30px; }
+  .hero-ctas{ display:flex; gap:12px; flex-wrap:wrap; }
+  .hero-stats{ display:flex; gap:28px; margin-top:36px; }
+  .hstat b{ font-family:var(--f-display); font-size:22px; display:block; }
+  .hstat span{ font-size:12px; color:var(--text-faint); font-family:var(--f-mono); }
+
+  /* signature: scanning card visual */
+  .scan-visual{ padding:34px; position:relative; }
+  .doc-mock{
+    position:relative; background:#fff; border-radius:12px; aspect-ratio:1.586/1;
+    box-shadow:0 30px 70px -20px rgba(0,0,0,0.55); overflow:hidden; margin:0 auto; max-width:340px;
+  }
+  .doc-mock::before{
+    content:''; position:absolute; inset:0;
+    background:
+      linear-gradient(135deg, #eef1fb 0%, #dfe6fb 100%);
+  }
+  .doc-mock .chip{ position:absolute; top:16%; left:8%; width:16%; height:16%; background:#d8b34a; border-radius:3px; }
+  .doc-mock .photo{ position:absolute; top:14%; left:26%; width:22%; height:44%; background:#b9c3e0; border-radius:3px; }
+  .doc-mock .line{ position:absolute; left:26%; height:6%; background:#c3cae3; border-radius:2px; }
+  .doc-mock .l1{ top:64%; width:44%; } .doc-mock .l2{ top:76%; width:32%; }
+  .doc-mock .corner{ position:absolute; width:22px; height:22px; border-color:var(--blue); }
+  .doc-mock .c1{ top:8px; left:8px; border-top:3px solid; border-left:3px solid; }
+  .doc-mock .c2{ top:8px; right:8px; border-top:3px solid; border-right:3px solid; }
+  .doc-mock .c3{ bottom:8px; left:8px; border-bottom:3px solid; border-left:3px solid; }
+  .doc-mock .c4{ bottom:8px; right:8px; border-bottom:3px solid; border-right:3px solid; }
+  .doc-mock .scanline{
+    position:absolute; left:0; right:0; height:2.5px;
+    background:linear-gradient(90deg, transparent, var(--blue), var(--purple), transparent);
+    box-shadow:0 0 18px 3px rgba(79,124,255,0.8);
+    animation:scanv 2.2s ease-in-out infinite;
+  }
+  @keyframes scanv{ 0%,100%{ top:6%; } 50%{ top:90%; } }
+  .scan-caption{ text-align:center; margin-top:16px; font-family:var(--f-mono); font-size:11.5px; color:var(--text-faint); }
+
+  .section{ padding:60px 0; }
+  .section-head{ max-width:560px; margin-bottom:40px; }
+  .section-head h2{ font-size:30px; font-weight:700; margin-bottom:10px; }
+  .section-head p{ color:var(--text-dim); font-size:14.5px; }
+
+  .tool-grid{ display:grid; grid-template-columns:repeat(2,1fr); gap:18px; }
+  @media (max-width:700px){ .tool-grid{ grid-template-columns:1fr; } }
+  .tcard{ padding:26px; transition:transform .18s, border-color .18s, box-shadow .18s; display:flex; flex-direction:column; height:100%; }
+  .tcard:hover{ transform:translateY(-4px); border-color:var(--border-hi); box-shadow:0 20px 44px -20px rgba(79,124,255,0.35); }
+  .tcard .num{ font-family:var(--f-mono); font-size:11px; color:var(--text-faint); margin-bottom:14px; }
+  .tcard .ic{
+    width:46px; height:46px; border-radius:12px; display:flex; align-items:center; justify-content:center;
+    font-size:21px; margin-bottom:16px; background:var(--surface); border:1px solid var(--border);
+  }
+  .tcard h3{ font-size:18px; margin-bottom:8px; }
+  .tcard p{ font-size:13.5px; color:var(--text-dim); flex:1; margin-bottom:18px; }
+  .tcard .go{ font-size:13px; font-weight:600; color:var(--blue); display:flex; align-items:center; gap:6px; }
+  .tcard .go svg{ transition:transform .15s; }
+  .tcard:hover .go svg{ transform:translateX(3px); }
+
+  .steps{ display:grid; grid-template-columns:repeat(4,1fr); gap:16px; }
+  @media (max-width:800px){ .steps{ grid-template-columns:1fr 1fr; } }
+  .step{ padding:20px; }
+  .step .sn{ font-family:var(--f-mono); font-size:13px; color:var(--purple); margin-bottom:10px; }
+  .step h4{ font-size:14.5px; margin-bottom:6px; }
+  .step p{ font-size:12.5px; color:var(--text-faint); }
+
+  .promise-bar{ display:flex; gap:14px; flex-wrap:wrap; justify-content:center; padding:22px 0; }
+  .pchip{ display:flex; align-items:center; gap:8px; padding:10px 16px; font-size:12.5px; color:var(--text-dim); }
+
+  footer{ border-top:1px solid var(--border); padding:34px 0; margin-top:20px; }
+  footer .wrap{ display:flex; justify-content:space-between; flex-wrap:wrap; gap:14px; align-items:center; }
+  footer p{ font-size:12.5px; color:var(--text-faint); }
+</style>
+</head>
+<body>
+
+<nav class="navbar">
+  <div class="wrap">
+    <div class="brand">
+      <div class="mark">AI</div>
+      <span>ADP PrintFlow<span class="tag">.AI</span></span>
+    </div>
+    <div class="nav-links">
+      <a href="#tools">Tools</a>
+      <a href="#how">How it works</a>
+      <a href="id-card.html" class="btn btn-primary btn-sm">Open a tool</a>
+    </div>
+  </div>
+</nav>
+
+<header class="hero">
+  <div class="wrap hero-grid">
+    <div>
+      <div class="eyebrow">4 tools · runs in your browser · no login</div>
+      <h1>Upload. Auto-crop.<br><span class="g">Straighten. Print.</span></h1>
+      <p>Any ID card, any document, any photo — ADP PrintFlow AI detects the edges, fixes the tilt, sharpens the quality and lays it out on A4 in real print size. One click, done.</p>
+      <div class="hero-ctas">
+        <a href="id-card.html" class="btn btn-primary">Start with ID Card Print</a>
+        <a href="#tools" class="btn btn-ghost">See all tools</a>
+      </div>
+      <div class="hero-stats">
+        <div class="hstat"><b>4</b><span>WORKING TOOLS</span></div>
+        <div class="hstat"><b>0</b><span>SIGN-UP NEEDED</span></div>
+        <div class="hstat"><b>A4</b><span>PRINT-READY OUTPUT</span></div>
+      </div>
+    </div>
+    <div class="scan-visual">
+      <div class="doc-mock">
+        <div class="chip"></div>
+        <div class="photo"></div>
+        <div class="line l1"></div>
+        <div class="line l2"></div>
+        <div class="corner c1"></div><div class="corner c2"></div>
+        <div class="corner c3"></div><div class="corner c4"></div>
+        <div class="scanline"></div>
+      </div>
+      <div class="scan-caption">detecting edges → straightening → enhancing</div>
+    </div>
+  </div>
+</header>
+
+<div class="wrap">
+  <div class="promise-bar glass">
+    <div class="pchip">✅ Real auto-crop (OpenCV)</div>
+    <div class="pchip">✅ Auto-straighten tilted scans</div>
+    <div class="pchip">✅ JPG + PDF + direct Print — every tool</div>
+    <div class="pchip">✅ No fake "coming soon" tools</div>
+  </div>
+</div>
+
+<section class="section" id="tools">
+  <div class="wrap">
+    <div class="section-head">
+      <div class="eyebrow">The 4 tools</div>
+      <h2>Everything a cyber cafe counter needs</h2>
+      <p>Every tool follows the same promise: upload → AI detects &amp; fixes → preview → download or print. No tool here is a placeholder.</p>
+    </div>
+    <div class="tool-grid">
+
+      <a class="tcard glass" href="id-card.html">
+        <div class="num">01</div>
+        <div class="ic">🪪</div>
+        <h3>Auto ID Card Print</h3>
+        <p>Upload front &amp; back of any Aadhaar, PAN or Voter card. Auto-detects the card edges, removes everything else, straightens tilt, and places both sides on one A4 sheet in real ID size.</p>
+        <div class="go">Open tool <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><path d="M5 12h14M13 6l6 6-6 6"/></svg></div>
+      </a>
+
+      <a class="tcard glass" href="document.html">
+        <div class="num">02</div>
+        <div class="ic">📄</div>
+        <h3>Smart Document Print</h3>
+        <p>Any A4-size document — auto-crops out the background, straightens tilted scans, sharpens quality, and sets it on a clean A4 layout, ready to print.</p>
+        <div class="go">Open tool <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><path d="M5 12h14M13 6l6 6-6 6"/></svg></div>
+      </a>
+
+      <a class="tcard glass" href="photo.html">
+        <div class="num">03</div>
+        <div class="ic">🪄</div>
+        <h3>Smart Photo Print</h3>
+        <p>Upload or capture a photo — AI detects the face, crops to passport size, sets a blue background, enhances quality, adds a 3px border and tiles 6/12/18/24 photos on one A4 sheet.</p>
+        <div class="go">Open tool <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><path d="M5 12h14M13 6l6 6-6 6"/></svg></div>
+      </a>
+
+      <a class="tcard glass" href="pdf.html">
+        <div class="num">04</div>
+        <div class="ic">🗂️</div>
+        <h3>Any Document to PDF</h3>
+        <p>Add multiple documents of any size at once. Each one gets auto-cropped and cleaned up, then combined into a single print-quality PDF.</p>
+        <div class="go">Open tool <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><path d="M5 12h14M13 6l6 6-6 6"/></svg></div>
+      </a>
+
+    </div>
+  </div>
+</section>
+
+<section class="section" id="how">
+  <div class="wrap">
+    <div class="section-head">
+      <div class="eyebrow">How it works</div>
+      <h2>Same flow, every tool</h2>
+    </div>
+    <div class="steps">
+      <div class="step glass"><div class="sn">01</div><h4>Upload / capture</h4><p>Pick a file or use your camera.</p></div>
+      <div class="step glass"><div class="sn">02</div><h4>AI detects &amp; fixes</h4><p>Edges found, tilt corrected, quality enhanced.</p></div>
+      <div class="step glass"><div class="sn">03</div><h4>Auto layout</h4><p>Placed on A4 at real print size.</p></div>
+      <div class="step glass"><div class="sn">04</div><h4>Download or print</h4><p>JPG, PDF, or straight to your printer.</p></div>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div class="wrap">
+    <div class="brand" style="font-size:15px;"><div class="mark" style="width:26px;height:26px;font-size:11px;">AI</div>ADP PrintFlow AI</div>
+    <p>Runs fully in your browser · no account, no server upload</p>
+  </div>
+</footer>
+
+</body>
+</html>
