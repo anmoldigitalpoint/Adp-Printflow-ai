@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Smart Photo Print — ADP PrintFlow AI</title>
+<link rel="stylesheet" href="style.css?v=1785466221">
+<link rel="stylesheet" href="tool.css?v=1785466221">
+</head>
+<body>
+
+<nav class="navbar">
+  <div class="wrap">
+    <a class="brand" href="index.html">
+      <div class="mark">AI</div>
+      <span>ADP PrintFlow<span class="tag">.AI</span></span>
+    </a>
+    <div class="nav-links"><a href="index.html">← All tools</a></div>
+  </div>
+</nav>
+
+<div class="wrap">
+  <div class="tool-header">
+    <div class="tool-title"><div class="tool-icon">🪄</div>Smart Photo Print</div>
+    <p class="tool-desc">Upload or capture a photo — AI finds the face, crops to real passport size, sets a blue background, enhances quality, adds a 3px border, and tiles your chosen count on one A4 sheet. One click.</p>
+  </div>
+
+  <div class="workspace">
+    <div>
+      <div class="panel glass">
+        <div class="panel-title">Step 1 · Upload photo</div>
+        <div class="dropzone" id="dz-photo">
+          <input type="file" id="file-photo" accept="image/*">
+          <div class="dz-empty">
+            <div class="dz-icon">🙂</div>
+            <div class="dz-label">Click or drop a photo</div>
+            <div class="dz-sub">Front-facing photo works best</div>
+          </div>
+        </div>
+        <button class="btn btn-ghost btn-sm btn-block" style="margin-top:8px;" id="cam-photo">📷 Use camera</button>
+      </div>
+
+      <div class="panel glass">
+        <div class="panel-title">Step 2 · Photos per sheet</div>
+        <div class="chip-group" id="count-chips">
+          <button class="chip active" data-count="6">6</button>
+          <button class="chip" data-count="12">12</button>
+          <button class="chip" data-count="18">18</button>
+          <button class="chip" data-count="24">24</button>
+        </div>
+      </div>
+
+      <div class="panel glass">
+        <div class="panel-title">Step 3 · Process</div>
+        <button class="btn btn-primary btn-block" id="btn-process" disabled>⚡ Auto-crop &amp; build A4</button>
+        <p class="footnote">Face detection → passport crop (35×45mm) → blue background → enhance → 3px border → A4 layout, 6 per row.</p>
+      </div>
+    </div>
+
+    <div class="panel glass" style="padding:0;">
+      <div class="status-pill" id="status"><div class="status-dot"></div><span id="status-text">Waiting for a photo…</span></div>
+      <div class="stage" id="stage">
+        <div class="stage-empty"><div class="se-icon">🪄</div><div>Upload a photo to see the live preview</div></div>
+      </div>
+      <div class="output-bar">
+        <button class="btn btn-ghost btn-sm" id="btn-jpg" disabled>⬇ Download JPG</button>
+        <button class="btn btn-ghost btn-sm" id="btn-pdf" disabled>⬇ Download PDF</button>
+        <button class="btn btn-primary btn-sm" id="btn-print" disabled>🖨 Print</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@mediapipe/selfie_segmentation/selfie_segmentation.js"></script>
+<script src="core.js?v=1785466221"></script>
+<script src="camera.js?v=1785466221"></script>
+<script src="photo-tool.js?v=1785466221"></script>
+</body>
+</html>
