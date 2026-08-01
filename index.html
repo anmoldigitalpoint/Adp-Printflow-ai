@@ -1,0 +1,223 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ADP PrintFlow AI | Cyber Cafe Print Automation</title>
+    <link rel="manifest" href="manifest.webmanifest">
+    <meta name="theme-color" content="#0a0a1a">
+    <link rel="apple-touch-icon" href="assets/icons/icon-192x192.png">
+
+    <!-- Core Libraries -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <script src="https://printjs-4de6.kxcdn.com/print.min.js"></script>
+    <link rel="stylesheet" href="https://printjs-4de6.kxcdn.com/print.min.css">
+    
+    <!-- AI & Processing Libraries -->
+    <script src="https://cdn.jsdelivr.net/npm/@imgly/background-removal@1.4.3/dist/imgly-background-removal.js"></script>
+    <script async src="https://docs.opencv.org/4.8.0/opencv.js" type="text/javascript"></script>
+    
+    <!-- PDF Libraries -->
+    <script src="https://unpkg.com/pdf-lib@1.17.1/dist/pdf-lib.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
+    <script>pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js';</script>
+
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="bg-glow glow-blue"></div>
+    <div class="bg-glow glow-purple"></div>
+    <nav class="glass-nav">
+        <div class="nav-container">
+            <div class="logo" onclick="app.navigate('home')">
+                <span class="neon-text">ADP</span> PrintFlow <span class="ai-badge">AI</span>
+            </div>
+            <div class="nav-links">
+                <a href="#" onclick="app.navigate('home')">Home</a>
+                <a href="#" onclick="document.getElementById('tools').scrollIntoView({behavior: 'smooth'})">Tools</a>
+                <a href="https://t.me/TrueCrazyMax" target="_blank">Support</a>
+                <button id="installAppBtn" class="btn-primary small" style="display: none;">Install App</button>
+            </div>
+        </div>
+    </nav>
+    <main id="app-container">
+        <section id="view-home" class="view active">
+            <div class="hero">
+                <h1 class="hero-title">AI Powered <span class="neon-text">Cyber Cafe Toolkit</span></h1>
+                <p class="hero-subtitle">All-in-one solution for Printing, PDFs, and Images.</p>
+                <div class="feature-chips">
+                    <span class="chip">✨ Print Automation</span>
+                    <span class="chip">📄 PDF Tools</span>
+                    <span class="chip">🖼️ Image Editing</span>
+                    <span class="chip">⚡ Offline Ready</span>
+                </div>
+            </div>
+
+            <div id="tools">
+                <!-- SECTION 1: PRINT TOOLS -->
+                <h2 class="section-heading">🖨️ AI Print Automation Tools</h2>
+                <div class="tools-section">
+                    <div class="tool-card glass-card" onclick="app.navigate('tool-passport')">
+                        <div class="tool-icon">👤</div>
+                        <h3>AI Passport Studio</h3>
+                        <p>Auto background remove & A4 layout generator.</p>
+                        <button class="btn-secondary">Start Tool</button>
+                    </div>
+                    <div class="tool-card glass-card" onclick="app.navigate('tool-smartcard')">
+                        <div class="tool-icon">💳</div>
+                        <h3>Smart Card Print</h3>
+                        <p>Perfect CR80 size print for Aadhaar & PAN cards.</p>
+                        <button class="btn-secondary">Start Tool</button>
+                    </div>
+                    <div class="tool-card glass-card" onclick="app.navigate('tool-document')">
+                        <div class="tool-icon">📄</div>
+                        <h3>Document Studio</h3>
+                        <p>Advanced Perspective fix & shadow removal for A4.</p>
+                        <button class="btn-secondary">Start Tool</button>
+                    </div>
+                </div>
+
+                <!-- SECTION 2: PDF TOOLS -->
+                <h2 class="section-heading" style="margin-top: 50px;">📑 PDF Toolkit</h2>
+                <div class="tools-section">
+                    <div class="tool-card glass-card" onclick="app.navigate('tool-pdf-merge')">
+                        <div class="tool-icon">🔗</div>
+                        <h3>Merge PDFs</h3>
+                        <p>Combine multiple PDF files into a single document.</p>
+                        <button class="btn-secondary">Start Tool</button>
+                    </div>
+                    <div class="tool-card glass-card" onclick="app.navigate('tool-pdf-to-jpg')">
+                        <div class="tool-icon">🖼️</div>
+                        <h3>PDF to JPG</h3>
+                        <p>Convert all pages of a PDF into high quality JPG images.</p>
+                        <button class="btn-secondary">Start Tool</button>
+                    </div>
+                    <div class="tool-card glass-card" onclick="app.navigate('tool-pdf-compress')">
+                        <div class="tool-icon">🗜️</div>
+                        <h3>Compress PDF</h3>
+                        <p>Reduce PDF file size for easy email and form uploads.</p>
+                        <button class="btn-secondary">Start Tool</button>
+                    </div>
+                </div>
+
+                <!-- SECTION 3: IMAGE TOOLS -->
+                <h2 class="section-heading" style="margin-top: 50px;">🖼️ JPEG / Image Tools</h2>
+                <div class="tools-section">
+                    <div class="tool-card glass-card" onclick="app.navigate('tool-img-compress')">
+                        <div class="tool-icon">📉</div>
+                        <h3>Compress Image (KB)</h3>
+                        <p>Reduce KB size of JPG/PNG for form uploads.</p>
+                        <button class="btn-secondary">Start Tool</button>
+                    </div>
+                    <div class="tool-card glass-card" onclick="app.navigate('tool-img-convert')">
+                        <div class="tool-icon">🔄</div>
+                        <h3>Format Converter</h3>
+                        <p>Convert PNG, WebP, or any image format into standard JPG.</p>
+                        <button class="btn-secondary">Start Tool</button>
+                    </div>
+                    <div class="tool-card glass-card" onclick="app.navigate('tool-img-resize')">
+                        <div class="tool-icon">📏</div>
+                        <h3>Resize Dimensions</h3>
+                        <p>Change width & height of images perfectly.</p>
+                        <button class="btn-secondary">Start Tool</button>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- ================= PRINT TOOLS VIEWS ================= -->
+        <section id="view-tool-passport" class="view">
+            <div class="tool-header"><h2>AI Passport Photo Studio</h2><button class="btn-back" onclick="app.navigate('home')">← Back to Home</button></div>
+            <div class="workspace glass-card">
+                <div class="upload-area" id="passport-upload" onclick="document.getElementById('passport-input').click()"><div class="upload-icon">📸</div><h3>Upload Customer Photo</h3><input type="file" id="passport-input" hidden accept="image/*" onchange="app.handlePassport()"></div>
+                <div id="passport-workspace" class="processing-workspace hidden"><div class="workflow-steps" id="passport-steps"><div class="step">Initializing AI...</div><div class="step">Applying Background...</div><div class="step">Ready!</div></div><div class="preview-area hidden" id="passport-preview" style="text-align: center;"><div class="layout-controls" style="margin-bottom: 20px;"><label>Copies: </label><select id="passport-copies" style="padding: 5px; border-radius: 5px; background: #333; color: white;"><option value="6">6 Photos</option><option value="12">12 Photos</option><option value="18">18 Photos</option></select></div><canvas id="passport-canvas" class="result-canvas" style="max-width: 100%; border: 1px solid #333;"></canvas><div class="action-buttons"><button class="btn-secondary" onclick="app.downloadPassportPDF()">Download PDF</button><button class="btn-primary" onclick="app.printPassport()">Print Now</button></div></div></div>
+            </div>
+        </section>
+
+        <section id="view-tool-smartcard" class="view">
+            <div class="tool-header"><h2>AI Smart Card Print</h2><button class="btn-back" onclick="app.navigate('home')">← Back to Home</button></div>
+            <div class="workspace glass-card">
+                <div class="upload-grid" id="smartcard-upload-area" style="display: flex; gap: 20px; justify-content: center; flex-wrap: wrap;"><div class="upload-area" onclick="document.getElementById('smartcard-front').click()" style="flex: 1; min-width: 250px;"><div class="upload-icon">💳</div><h3>Upload Front</h3><input type="file" id="smartcard-front" hidden accept="image/*" onchange="app.loadSmartCard('front')"><p id="front-status">Waiting...</p></div><div class="upload-area" onclick="document.getElementById('smartcard-back').click()" style="flex: 1; min-width: 250px;"><div class="upload-icon">🔄</div><h3>Upload Back</h3><input type="file" id="smartcard-back" hidden accept="image/*" onchange="app.loadSmartCard('back')"><p id="back-status">Waiting...</p></div></div>
+                <div id="smartcard-workspace" class="processing-workspace hidden" style="margin-top: 30px;"><div class="workflow-steps" id="smartcard-steps"><div class="step">Processing...</div><div class="step">Enhancing...</div><div class="step">Arranging...</div></div><div class="preview-area hidden" id="smartcard-preview" style="text-align: center;"><canvas id="smartcard-canvas" class="result-canvas" style="max-width: 100%; border: 1px solid #333; margin-top:20px;"></canvas><div class="action-buttons"><button class="btn-secondary" onclick="app.downloadSmartCardPDF()">Download PDF</button><button class="btn-primary" onclick="app.printSmartCard()">Print Now</button></div></div></div>
+            </div>
+        </section>
+
+        <section id="view-tool-document" class="view">
+            <div class="tool-header"><h2>AI Document Print Studio</h2><button class="btn-back" onclick="app.navigate('home')">← Back to Home</button></div>
+            <div class="workspace glass-card">
+                <div class="upload-area" id="document-upload" onclick="document.getElementById('document-input').click()"><div class="upload-icon">📄</div><h3>Upload A4 Document</h3><input type="file" id="document-input" hidden accept="image/*" onchange="app.handleDocumentUpload()"></div>
+                <div id="document-crop-area" class="hidden" style="text-align: center; margin-top: 20px;"><p style="color: var(--neon-blue); margin-bottom: 10px;">Drag points to document corners</p><div id="crop-container" style="position: relative; display: inline-block; border: 2px solid #333;"><img id="doc-source-image" src="" style="max-width: 100%; max-height: 60vh; display: block;"><div class="crop-point" id="pt-tl" style="top: 10%; left: 10%;"></div><div class="crop-point" id="pt-tr" style="top: 10%; left: 90%;"></div><div class="crop-point" id="pt-bl" style="top: 90%; left: 10%;"></div><div class="crop-point" id="pt-br" style="top: 90%; left: 90%;"></div></div><div style="margin-top: 20px;"><button class="btn-primary" onclick="app.applySmartCrop()">✂️ Crop & Straighten</button></div></div>
+                <div id="document-workspace" class="processing-workspace hidden"><div class="preview-area" id="document-preview" style="text-align: center;"><canvas id="document-canvas" class="result-canvas" style="max-width: 100%; border: 1px solid #333;"></canvas><div class="action-buttons"><button class="btn-secondary" onclick="app.downloadDocumentPDF()">Download PDF</button><button class="btn-primary" onclick="app.printDocument()">Print Now</button></div></div></div>
+            </div>
+        </section>
+
+        <!-- ================= PDF TOOLS VIEWS ================= -->
+        <section id="view-tool-pdf-merge" class="view">
+            <div class="tool-header"><h2>Merge Multiple PDFs</h2><button class="btn-back" onclick="app.navigate('home')">← Back to Home</button></div>
+            <div class="workspace glass-card" style="text-align: center;">
+                <div class="upload-area" onclick="document.getElementById('pdf-merge-input').click()"><div class="upload-icon">🔗</div><h3>Select PDF Files (Min 2)</h3><input type="file" id="pdf-merge-input" hidden accept="application/pdf" multiple onchange="app.handlePDFMergeUI()"></div>
+                <div id="pdf-merge-status" class="hidden" style="margin-top: 20px;"><h3 id="pdf-file-count" style="color: var(--neon-blue); margin-bottom: 20px;">0 files selected</h3><button class="btn-primary large" id="btn-do-merge" onclick="app.executePDFMerge()">Combine PDFs</button><p id="pdf-processing-text" style="color: #25D366; margin-top: 10px;" class="hidden">Merging PDFs... Please wait.</p></div>
+            </div>
+        </section>
+
+        <section id="view-tool-pdf-to-jpg" class="view">
+            <div class="tool-header"><h2>PDF to JPG Converter</h2><button class="btn-back" onclick="app.navigate('home')">← Back to Home</button></div>
+            <div class="workspace glass-card" style="text-align: center;">
+                <div class="upload-area" id="pdf-jpg-upload" onclick="document.getElementById('pdf-jpg-input').click()"><div class="upload-icon">🖼️</div><h3>Upload PDF File</h3><input type="file" id="pdf-jpg-input" hidden accept="application/pdf" onchange="app.handlePDFtoJPG()"></div>
+                <div id="pdf-jpg-status" class="hidden" style="margin-top: 20px;"><p id="pdf-jpg-text" style="color: var(--neon-blue);">Processing pages...</p></div>
+            </div>
+        </section>
+
+        <section id="view-tool-pdf-compress" class="view">
+            <div class="tool-header"><h2>Compress PDF Size</h2><button class="btn-back" onclick="app.navigate('home')">← Back to Home</button></div>
+            <div class="workspace glass-card" style="text-align: center;">
+                <div class="upload-area" id="pdf-compress-upload" onclick="document.getElementById('pdf-compress-input').click()"><div class="upload-icon">🗜️</div><h3>Upload PDF to Compress</h3><input type="file" id="pdf-compress-input" hidden accept="application/pdf" onchange="app.handlePDFCompress()"></div>
+                <div id="pdf-compress-status" class="hidden" style="margin-top: 20px;"><p id="pdf-compress-text" style="color: var(--neon-blue);">Optimizing PDF structure...</p></div>
+            </div>
+        </section>
+
+        <!-- ================= IMAGE TOOLS VIEWS ================= -->
+        <section id="view-tool-img-compress" class="view">
+            <div class="tool-header"><h2>Compress Image (Reduce KB)</h2><button class="btn-back" onclick="app.navigate('home')">← Back to Home</button></div>
+            <div class="workspace glass-card" style="text-align: center;">
+                <div class="upload-area" id="img-compress-upload" onclick="document.getElementById('img-compress-input').click()"><div class="upload-icon">📉</div><h3>Upload Image</h3><input type="file" id="img-compress-input" hidden accept="image/*" onchange="app.handleImgCompressUI()"></div>
+                <div id="img-compress-workspace" class="hidden" style="margin-top: 20px;">
+                    <p>Original Size: <span id="img-orig-size" style="color:red;">0 KB</span></p>
+                    <div style="margin: 20px 0;"><label>Quality: </label><select id="img-quality-selector" style="padding: 5px; background: #333; color: white;"><option value="0.8">High (80%)</option><option value="0.5" selected>Medium (50%)</option><option value="0.2">Low (20%)</option></select></div>
+                    <button class="btn-primary" onclick="app.executeImgCompress()">Compress & Download</button>
+                </div>
+            </div>
+        </section>
+
+        <section id="view-tool-img-convert" class="view">
+            <div class="tool-header"><h2>Format Converter (to JPG)</h2><button class="btn-back" onclick="app.navigate('home')">← Back to Home</button></div>
+            <div class="workspace glass-card" style="text-align: center;">
+                <div class="upload-area" id="img-convert-upload" onclick="document.getElementById('img-convert-input').click()"><div class="upload-icon">🔄</div><h3>Upload PNG / WEBP</h3><input type="file" id="img-convert-input" hidden accept="image/*" onchange="app.handleImgConvert()"></div>
+                <div id="img-convert-status" class="hidden" style="margin-top: 20px;"><p style="color: var(--neon-blue);">Converting to JPG...</p></div>
+            </div>
+        </section>
+
+        <section id="view-tool-img-resize" class="view">
+            <div class="tool-header"><h2>Resize Image Dimensions</h2><button class="btn-back" onclick="app.navigate('home')">← Back to Home</button></div>
+            <div class="workspace glass-card" style="text-align: center;">
+                <div class="upload-area" id="img-resize-upload" onclick="document.getElementById('img-resize-input').click()"><div class="upload-icon">📏</div><h3>Upload Image</h3><input type="file" id="img-resize-input" hidden accept="image/*" onchange="app.handleImgResizeUI()"></div>
+                <div id="img-resize-workspace" class="hidden" style="margin-top: 20px;">
+                    <div style="display: flex; justify-content: center; gap: 15px; margin-bottom: 20px;">
+                        <div><label>Width (px):</label><br><input type="number" id="resize-w" style="padding:5px; width:100px; background:#333; color:#fff;" value="500"></div>
+                        <div><label>Height (px):</label><br><input type="number" id="resize-h" style="padding:5px; width:100px; background:#333; color:#fff;" value="500"></div>
+                    </div>
+                    <button class="btn-primary" onclick="app.executeImgResize()">Resize & Download</button>
+                </div>
+            </div>
+        </section>
+
+    </main>
+    <div class="floating-social">
+        <a href="https://whatsapp.com/channel/0029Va5tM43KwqSYrnKWs532" target="_blank" class="social-btn whatsapp">W</a>
+        <a href="https://t.me/Anmol_Digital_Seva" target="_blank" class="social-btn telegram">T</a>
+    </div>
+    <script src="app.js"></script>
+</body>
+</html>
