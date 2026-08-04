@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Document AI | CyberOS</title>
+    <link rel="stylesheet" href="./css/style.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <script async src="https://docs.opencv.org/4.8.0/opencv.js" id="opencv-js"></script>
+</head>
+<body class="dark-theme">
+    <nav class="glass-nav">
+        <div class="nav-container">
+            <div class="brand">Document <span class="accent">AI</span></div>
+            <div class="nav-links"><a href="./index.html">Dashboard</a></div>
+        </div>
+    </nav>
+    <main class="container workspace">
+        <aside class="sidebar">
+            <div class="panel">
+                <div class="panel-title">Layout</div>
+                <div class="radio-grid">
+                    <button class="btn-outline active" id="dt-a4">A4 Doc</button>
+                    <button class="btn-outline" id="dt-id">ID Card</button>
+                </div>
+            </div>
+            <div class="panel" id="upload-panel">
+                <input type="file" id="file-input" accept="image/*" class="hidden">
+                <button id="btn-gallery" class="btn-primary" style="width:100%; margin-bottom:10px;">Upload Image</button>
+            </div>
+            <div class="panel">
+                <div class="panel-title">Adjustments</div>
+                <label>Brightness</label><input type="range" id="val-b" min="-100" max="100" value="0">
+                <label>Contrast</label><input type="range" id="val-c" min="0.5" max="3" step="0.1" value="1">
+                <label>Sharpness</label><input type="range" id="val-s" min="0" max="10" step="1" value="0">
+                <div class="radio-grid" style="margin-top:10px;">
+                    <button id="btn-col" class="btn-outline active">Color</button>
+                    <button id="btn-bw" class="btn-outline">B&W</button>
+                </div>
+            </div>
+            <div class="panel">
+                <button id="btn-pdf" class="btn-primary" style="width:100%; margin-bottom:10px;">Export PDF</button>
+                <button id="btn-jpg" class="btn-outline" style="width:100%;">Export JPG</button>
+            </div>
+        </aside>
+        <div class="main-view">
+            <div class="canvas-container" id="canvas-wrapper">
+                <canvas id="doc-canvas"></canvas>
+            </div>
+            <div class="toolbar glass-card" id="editor-toolbar">
+                <button id="btn-auto" class="btn-primary">Auto Detect</button>
+                <button id="btn-crop" class="btn-outline">Crop & Fix</button>
+                <button id="btn-rotate" class="btn-outline">Rotate</button>
+            </div>
+            <div id="loader" class="processing-overlay"><div class="spinner"></div></div>
+        </div>
+    </main>
+    <script type="module" src="./js/document.js"></script>
+</body>
+</html>
