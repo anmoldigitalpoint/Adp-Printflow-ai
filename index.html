@@ -1,0 +1,397 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Smart Print & Crop Tool</title>
+    
+    <!-- Libraries for PDF and JPEG Export -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            background-color: #f0f2f5;
+            color: #333;
+        }
+
+        header {
+            background-color: #1a252f;
+            color: white;
+            text-align: center;
+            padding: 15px;
+        }
+
+        .toolbar {
+            display: flex;
+            justify-content: center;
+            background-color: #2c3e50;
+            padding: 10px;
+            gap: 10px;
+        }
+
+        .tab-btn {
+            background-color: transparent;
+            color: white;
+            border: 1px solid transparent;
+            padding: 10px 20px;
+            cursor: pointer;
+            font-size: 16px;
+            border-radius: 5px;
+            transition: 0.3s;
+        }
+
+        .tab-btn:hover, .tab-btn.active {
+            background-color: #3498db;
+            border: 1px solid #2980b9;
+        }
+
+        .main-container {
+            display: flex;
+            max-width: 1200px;
+            margin: 20px auto;
+            gap: 20px;
+            padding: 0 20px;
+        }
+
+        /* Controls Panel */
+        .controls-panel {
+            flex: 1;
+            background: white;
+            padding: 25px;
+            border-radius: 8px;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+            height: fit-content;
+        }
+
+        .controls-panel h2 {
+            margin-bottom: 15px;
+            color: #2c3e50;
+        }
+
+        .upload-btn {
+            display: block;
+            background-color: #27ae60;
+            color: white;
+            text-align: center;
+            padding: 15px;
+            border-radius: 5px;
+            cursor: pointer;
+            margin: 20px 0;
+            font-weight: bold;
+            font-size: 16px;
+            transition: 0.3s;
+        }
+
+        .upload-btn:hover { background-color: #219150; }
+        .upload-btn input { display: none; }
+
+        .options-group { margin: 15px 0; padding: 10px; background: #f8f9fa; border-radius: 5px; }
+        .options-group label { margin-right: 15px; cursor: pointer; font-weight: 500;}
+
+        .action-buttons {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            margin-top: 20px;
+        }
+
+        .action-btn {
+            padding: 12px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-weight: bold;
+            color: white;
+            font-size: 15px;
+            transition: 0.3s;
+        }
+
+        .btn-pdf { background-color: #e74c3c; }
+        .btn-jpg { background-color: #3498db; }
+        .btn-print { background-color: #f39c12; }
+        
+        .action-btn:hover { opacity: 0.9; }
+
+        /* A4 Canvas Preview */
+        .preview-panel {
+            flex: 2;
+            display: flex;
+            justify-content: center;
+            overflow: auto;
+        }
+
+        .a4-canvas {
+            background: white;
+            width: 210mm;
+            height: 297mm;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+            position: relative;
+            padding: 10mm;
+            background-color: white;
+        }
+
+        .placeholder-text {
+            text-align: center;
+            color: #999;
+            margin-top: 50%;
+            transform: translateY(-50%);
+            font-size: 1.2rem;
+        }
+
+        /* Layouts inside A4 */
+        .layout-container {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: flex-start;
+            align-content: flex-start;
+            width: 100%;
+            height: 100%;
+        }
+
+        /* Smart ID Layout (Front & Back Side-by-Side) */
+        .id-card {
+            width: 85mm;  /* Standard ID Width */
+            height: 54mm; /* Standard ID Height */
+            margin: 5mm;
+            object-fit: cover;
+            border: 1px dashed #ccc;
+            border-radius: 3px;
+            filter: contrast(1.1) brightness(1.05); /* Auto Quality Enhancement */
+        }
+
+        /* Quick Photo Layout (Passport Size 35x45mm) */
+        .passport-photo {
+            width: 35mm;
+            height: 45mm;
+            object-fit: cover;
+            margin: 2mm 1.5mm; /* Gap adjusted to fit 6 in a row */
+            border: 1px solid #ddd;
+            filter: contrast(1.1) brightness(1.05);
+        }
+
+        /* Smart Document Layout (Full A4 Fit) */
+        .smart-doc {
+            width: 100%;
+            max-height: 277mm; /* A4 height minus padding */
+            object-fit: contain;
+            filter: contrast(1.2) brightness(1.1); /* Text Enhancement */
+        }
+
+        /* Print Media Query */
+        @media print {
+            body * { visibility: hidden; }
+            .a4-canvas, .a4-canvas * { visibility: visible; }
+            .a4-canvas {
+                position: absolute;
+                left: 0;
+                top: 0;
+                width: 210mm;
+                height: 297mm;
+                margin: 0;
+                padding: 10mm;
+                box-shadow: none;
+                page-break-after: avoid;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <header>
+        <h1>Smart Print & Crop Tool</h1>
+    </header>
+
+    <div class="toolbar">
+        <button class="tab-btn active" onclick="switchTool('id')">Smart ID Print</button>
+        <button class="tab-btn" onclick="switchTool('doc')">Smart Document</button>
+        <button class="tab-btn" onclick="switchTool('photo')">Quick Photo Print</button>
+    </div>
+
+    <div class="main-container">
+        <!-- Controls -->
+        <div class="controls-panel">
+            <h2 id="tool-title">Smart ID Print</h2>
+            <p id="tool-desc">Upload Front and Back side of Aadhaar/PAN/Voter ID. It will auto-set side by side at the top of A4.</p>
+            
+            <label class="upload-btn">
+                <span id="upload-text">Upload Front & Back Image</span>
+                <input type="file" id="fileInput" accept="image/*" multiple onchange="handleFiles(event)">
+            </label>
+
+            <!-- Only visible for Photo Print -->
+            <div id="photo-options" class="options-group" style="display: none;">
+                <p style="margin-bottom: 10px;">Select Quantity:</p>
+                <label><input type="radio" name="qty" value="6" checked onchange="renderImages()"> 6 Photos</label>
+                <label><input type="radio" name="qty" value="12" onchange="renderImages()"> 12 Photos</label>
+                <label><input type="radio" name="qty" value="18" onchange="renderImages()"> 18 Photos</label>
+            </div>
+
+            <div class="action-buttons">
+                <button class="action-btn btn-print" onclick="printPage()">🖨️ Direct Print</button>
+                <button class="action-btn btn-pdf" onclick="downloadPDF()">📄 Download PDF</button>
+                <button class="action-btn btn-jpg" onclick="downloadJPEG()">🖼️ Download JPEG</button>
+            </div>
+        </div>
+
+        <!-- Preview -->
+        <div class="preview-panel">
+            <div class="a4-canvas" id="a4-canvas">
+                <p class="placeholder-text" id="placeholder">Upload images to see preview</p>
+                <div class="layout-container" id="layout-container"></div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let currentTool = 'id';
+        let uploadedImages = [];
+
+        // Tab Switching Logic
+        function switchTool(tool) {
+            currentTool = tool;
+            uploadedImages = []; // Reset images on tab switch
+            
+            document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
+            event.target.classList.add('active');
+
+            let title = document.getElementById('tool-title');
+            let desc = document.getElementById('tool-desc');
+            let photoOptions = document.getElementById('photo-options');
+            let uploadText = document.getElementById('upload-text');
+
+            if (tool === 'id') {
+                title.innerText = "Smart ID Print";
+                desc.innerText = "Upload Front and Back side of Aadhaar/PAN/Voter ID. It will auto-set side by side at the top of A4.";
+                uploadText.innerText = "Upload Front & Back Image";
+                photoOptions.style.display = "none";
+                document.getElementById('fileInput').multiple = true;
+            } else if (tool === 'doc') {
+                title.innerText = "Smart Document";
+                desc.innerText = "Upload a document. It will auto-align and enhance quality for A4 print.";
+                uploadText.innerText = "Upload Document";
+                photoOptions.style.display = "none";
+                document.getElementById('fileInput').multiple = false;
+            } else if (tool === 'photo') {
+                title.innerText = "Quick Photo Print";
+                desc.innerText = "Upload a photo. It will auto-set on A4 layout (6 photos in one line).";
+                uploadText.innerText = "Upload Photo";
+                photoOptions.style.display = "block";
+                document.getElementById('fileInput').multiple = false;
+            }
+            
+            document.getElementById('layout-container').innerHTML = '';
+            document.getElementById('placeholder').style.display = 'block';
+        }
+
+        // File Upload Logic
+        function handleFiles(event) {
+            const files = event.target.files;
+            if (files.length === 0) return;
+
+            uploadedImages = [];
+            let loadedCount = 0;
+
+            for (let i = 0; i < files.length; i++) {
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    uploadedImages.push(e.target.result);
+                    loadedCount++;
+                    if (loadedCount === files.length) {
+                        renderImages();
+                    }
+                }
+                reader.readAsDataURL(files[i]);
+            }
+        }
+
+        // Render Logic inside A4 Canvas
+        function renderImages() {
+            const container = document.getElementById('layout-container');
+            const placeholder = document.getElementById('placeholder');
+            
+            if (uploadedImages.length === 0) return;
+            
+            placeholder.style.display = 'none';
+            container.innerHTML = '';
+
+            if (currentTool === 'id') {
+                // Show up to 2 images for ID (Front and Back)
+                for (let i = 0; i < Math.min(2, uploadedImages.length); i++) {
+                    let img = document.createElement('img');
+                    img.src = uploadedImages[i];
+                    img.className = 'id-card';
+                    container.appendChild(img);
+                }
+            } 
+            else if (currentTool === 'doc') {
+                // Show 1 document
+                let img = document.createElement('img');
+                img.src = uploadedImages[0];
+                img.className = 'smart-doc';
+                container.appendChild(img);
+            } 
+            else if (currentTool === 'photo') {
+                // Show 6, 12, or 18 passport photos
+                let qty = parseInt(document.querySelector('input[name="qty"]:checked').value);
+                for (let i = 0; i < qty; i++) {
+                    let img = document.createElement('img');
+                    img.src = uploadedImages[0];
+                    img.className = 'passport-photo';
+                    container.appendChild(img);
+                }
+            }
+        }
+
+        // --- Export Functions ---
+
+        // 1. Direct Print
+        function printPage() {
+            if (uploadedImages.length === 0) {
+                alert("Please upload an image first.");
+                return;
+            }
+            window.print();
+        }
+
+        // 2. Download JPEG
+        function downloadJPEG() {
+            const element = document.getElementById('a4-canvas');
+            if (uploadedImages.length === 0) return alert("Please upload an image first.");
+            
+            html2canvas(element, { scale: 2 }).then(canvas => {
+                let link = document.createElement('a');
+                link.download = 'SmartPrint_Output.jpg';
+                link.href = canvas.toDataURL('image/jpeg', 0.9);
+                link.click();
+            });
+        }
+
+        // 3. Download PDF
+        function downloadPDF() {
+            const element = document.getElementById('a4-canvas');
+            if (uploadedImages.length === 0) return alert("Please upload an image first.");
+            
+            const { jsPDF } = window.jspdf;
+            
+            // HTML to Canvas then Canvas to PDF
+            html2canvas(element, { scale: 2 }).then(canvas => {
+                const imgData = canvas.toDataURL('image/jpeg', 0.9);
+                // A4 dimensions in mm: 210 x 297
+                const pdf = new jsPDF('p', 'mm', 'a4'); 
+                
+                pdf.addImage(imgData, 'JPEG', 0, 0, 210, 297);
+                pdf.save('SmartPrint_Document.pdf');
+            });
+        }
+    </script>
+
+</body>
+</html>
