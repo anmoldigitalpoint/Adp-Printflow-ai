@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Passport Studio | CyberOS</title>
+    <link rel="stylesheet" href="./css/style.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <script type="module" src="https://cdn.jsdelivr.net/npm/@mediapipe/tasks-vision/vision_bundle.js"></script>
+</head>
+<body class="dark-theme">
+    <nav class="glass-nav">
+        <div class="nav-container">
+            <div class="brand">Passport <span class="accent" style="color:var(--accent-blue)">Studio</span></div>
+            <div class="nav-links"><a href="./index.html">Dashboard</a></div>
+        </div>
+    </nav>
+    <main class="container workspace">
+        <aside class="sidebar">
+            <div class="panel">
+                <input type="file" id="pass-file" accept="image/*" class="hidden">
+                <button id="btn-pass-up" class="btn-primary" style="background:var(--accent-blue); width:100%;">Upload Photo</button>
+            </div>
+            <div class="panel">
+                <div class="panel-title">Layout & BG</div>
+                <select id="sel-size" class="select-box" style="margin-bottom:10px;">
+                    <option value="3.5x4.5">Passport (3.5x4.5cm)</option>
+                    <option value="2x2">US Visa (2x2in)</option>
+                </select>
+                <select id="sel-sheet" class="select-box" style="margin-bottom:10px;">
+                    <option value="6">6 Photos</option>
+                    <option value="12">12 Photos (A4)</option>
+                </select>
+                <div class="radio-grid">
+                    <button id="bg-org" class="btn-outline active">Org</button>
+                    <button id="bg-wht" class="btn-outline">White</button>
+                    <button id="bg-blu" class="btn-outline">Blue</button>
+                </div>
+            </div>
+            <div class="panel">
+                <button id="btn-pass-pdf" class="btn-primary" style="background:var(--accent-blue); width:100%; margin-bottom:10px;">Export PDF</button>
+                <button id="btn-pass-jpg" class="btn-outline" style="width:100%;">Export JPG</button>
+            </div>
+        </aside>
+        <div class="main-view">
+            <div class="canvas-container" id="pass-wrapper">
+                <canvas id="pass-canvas"></canvas>
+            </div>
+            <div class="toolbar glass-card">
+                <button id="btn-align" class="btn-primary" style="background:var(--accent-blue); color:#000;">Auto Align Face</button>
+                <button id="btn-rmbg" class="btn-outline">Remove BG</button>
+            </div>
+            <div id="pass-loader" class="processing-overlay"><div class="spinner" style="border-top-color:var(--accent-blue);"></div></div>
+        </div>
+    </main>
+    <script type="module" src="./js/passport.js"></script>
+</body>
+</html>
