@@ -1,82 +1,312 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Adp-Printflow-ai — Auto-layout ID cards & photos for A4 print</title>
-<link rel="stylesheet" href="assets/css/style.css">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Digital Services Hub</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- FontAwesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background-color: #f8fafc; }
+        .tool-card {
+            background: white; border-radius: 16px; border: 1px solid #e2e8f0;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.02); transition: all 0.2s ease;
+            position: relative; display: flex; flex-direction: column; align-items: center; 
+            justify-content: center; padding: 16px 8px; text-align: center; cursor: pointer; height: 110px;
+        }
+        .tool-card:hover { transform: translateY(-3px); box-shadow: 0 8px 15px rgba(0,0,0,0.08); border-color: #cbd5e1; }
+        .status-dot { position: absolute; top: 10px; right: 10px; width: 8px; height: 8px; border-radius: 50%; }
+        .dot-green { background-color: #22c55e; }
+        .dot-red { background-color: #ef4444; }
+        .section-title { font-size: 1.1rem; font-weight: 700; color: #1e293b; margin-bottom: 1rem; border-left: 4px solid #8b5cf6; padding-left: 8px; }
+        
+        /* Custom Scrollbar */
+        ::-webkit-scrollbar { width: 6px; }
+        ::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 10px; }
+    </style>
 </head>
-<body>
+<body class="text-gray-800 pb-20">
 
-<div class="topbar">
-  <div class="shell topbar-inner">
-    <a href="index.html" class="brand">
-      <span class="brand-mark">Adp-Printflow<span>-ai</span></span>
-      <span class="brand-tag">/ print layout studio</span>
+    <!-- Top Navigation Bar -->
+    <header class="bg-white shadow-sm p-3 flex justify-between items-center sticky top-0 z-50">
+        <div class="flex items-center gap-2">
+            <div class="text-2xl font-black italic tracking-tighter text-blue-900">AK</div>
+            <div>
+                <h1 class="text-xl font-bold leading-none text-gray-800">PrintHub<span class="text-blue-500 text-sm"><i class="fas fa-border-all ml-1"></i></span></h1>
+                <p class="text-[10px] text-gray-500 font-medium">by TechnicalMehta</p>
+            </div>
+        </div>
+        <div class="flex items-center gap-4 text-gray-600 text-xl">
+            <i class="fas fa-border-all bg-blue-50 text-blue-600 p-2 rounded-lg cursor-pointer"></i>
+            <i class="fas fa-store hover:text-blue-600 cursor-pointer"></i>
+            <i class="far fa-user hover:text-blue-600 cursor-pointer"></i>
+            <i class="fas fa-bars hover:text-blue-600 cursor-pointer"></i>
+        </div>
+    </header>
+
+    <main class="max-w-md mx-auto p-4 md:max-w-4xl">
+        
+        <!-- Hero Banner -->
+        <div class="bg-gradient-to-br from-pink-400 via-purple-400 to-blue-400 rounded-2xl p-6 text-white text-center mb-6 shadow-md relative overflow-hidden">
+            <div class="absolute inset-0 bg-white opacity-10" style="background-image: radial-gradient(#fff 1px, transparent 1px); background-size: 20px 20px;"></div>
+            <h2 class="text-2xl font-bold mb-2 relative z-10">Launch Your Digital<br>Operations With<br>PrintHub</h2>
+            <p class="text-xs opacity-95 relative z-10 mt-2 px-4">Your all-in-one platform for seamless online printing and digital services.</p>
+        </div>
+
+        <!-- Search Bar -->
+        <div class="relative mb-8 shadow-sm rounded-full bg-white border border-gray-200">
+            <i class="fas fa-search absolute left-4 top-3.5 text-gray-400"></i>
+            <input type="text" placeholder="Search services, forms, files... (e.g. Aadhar)" class="w-full pl-10 pr-4 py-3 rounded-full focus:outline-none focus:border-blue-400 bg-transparent text-sm">
+        </div>
+
+        <!-- 1. Essential & Services -->
+        <div class="mb-8">
+            <h3 class="section-title border-blue-600">Essential & Services</h3>
+            <div class="grid grid-cols-3 gap-3 md:grid-cols-4 lg:grid-cols-5">
+                <div class="tool-card" onclick="prepareTool('Latest Jobs')">
+                    <span class="status-dot dot-red"></span>
+                    <i class="fas fa-briefcase text-3xl text-blue-500 mb-2"></i>
+                    <span class="text-xs font-semibold">Latest Jobs</span>
+                </div>
+                <div class="tool-card" onclick="prepareTool('Mock Test')">
+                    <span class="status-dot dot-green"></span>
+                    <i class="fas fa-laptop-code text-3xl text-indigo-500 mb-2"></i>
+                    <span class="text-xs font-semibold">Mock Test</span>
+                </div>
+                <div class="tool-card" onclick="prepareTool('ID Card Print')">
+                    <span class="status-dot dot-green"></span>
+                    <i class="fas fa-id-card text-3xl text-blue-600 mb-2"></i>
+                    <span class="text-xs font-semibold">ID Card Print</span>
+                </div>
+                <div class="tool-card" onclick="prepareTool('PVC Auto Crop')">
+                    <span class="status-dot dot-green"></span>
+                    <i class="fas fa-crop-alt text-3xl text-gray-700 mb-2"></i>
+                    <span class="text-xs font-semibold">PVC Auto Crop</span>
+                </div>
+                <div class="tool-card" onclick="prepareTool('Auto Print')">
+                    <span class="status-dot dot-green"></span>
+                    <i class="fas fa-print text-3xl text-blue-500 mb-2"></i>
+                    <span class="text-xs font-semibold">Auto Print</span>
+                </div>
+                <div class="tool-card" onclick="prepareTool('Passport Photo')">
+                    <i class="fas fa-user-circle text-3xl text-orange-500 mb-2"></i>
+                    <span class="text-xs font-semibold">Passport Photo</span>
+                </div>
+                <div class="tool-card" onclick="prepareTool('Photo Crop And Resize')">
+                    <i class="fas fa-expand-arrows-alt text-3xl text-blue-400 mb-2"></i>
+                    <span class="text-xs font-semibold leading-tight mt-1">Photo Crop And Resize</span>
+                </div>
+                <div class="tool-card" onclick="prepareTool('Resume/CV')">
+                    <i class="fas fa-file-alt text-3xl text-gray-500 mb-2"></i>
+                    <span class="text-xs font-semibold">Resume/CV</span>
+                </div>
+                <div class="tool-card" onclick="prepareTool('New Service Post')">
+                    <span class="status-dot dot-green"></span>
+                    <i class="fas fa-folder-plus text-3xl text-yellow-500 mb-2"></i>
+                    <span class="text-xs font-semibold leading-tight mt-1">New Service Post</span>
+                </div>
+                <div class="tool-card" onclick="prepareTool('PPT / Profile')">
+                    <span class="status-dot dot-green"></span>
+                    <i class="fas fa-file-powerpoint text-3xl text-red-500 mb-2"></i>
+                    <span class="text-xs font-semibold">PPT / Profile</span>
+                </div>
+                <div class="tool-card" onclick="prepareTool('NSDL PAAM ID')">
+                    <span class="status-dot dot-red"></span>
+                    <i class="fas fa-hand-pointer text-3xl text-pink-400 mb-2"></i>
+                    <span class="text-xs font-semibold">NSDL PAAM ID</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- 2. Creative Design Studio -->
+        <div class="mb-8">
+            <h3 class="section-title border-pink-500">Creative Design Studio</h3>
+            <div class="grid grid-cols-3 gap-3 md:grid-cols-4">
+                <div class="tool-card" onclick="prepareTool('Pro Resume Maker')">
+                    <span class="status-dot dot-green"></span>
+                    <i class="fas fa-file-signature text-3xl text-blue-400 mb-2"></i>
+                    <span class="text-xs font-semibold">Pro Resume Maker</span>
+                </div>
+                <div class="tool-card" onclick="prepareTool('Marriage Biodata')">
+                    <span class="status-dot dot-green"></span>
+                    <i class="fas fa-envelope-open-text text-3xl text-yellow-500 mb-2"></i>
+                    <span class="text-xs font-semibold">Marriage Biodata</span>
+                </div>
+                <div class="tool-card" onclick="prepareTool('Pro ID Maker')">
+                    <span class="status-dot dot-green"></span>
+                    <i class="fas fa-id-badge text-3xl text-indigo-500 mb-2"></i>
+                    <span class="text-xs font-semibold">Pro ID Maker</span>
+                </div>
+                <div class="tool-card" onclick="prepareTool('Pro Poster Maker')">
+                    <span class="status-dot dot-green"></span>
+                    <i class="fas fa-camera-retro text-3xl text-blue-500 mb-2"></i>
+                    <span class="text-xs font-semibold">Pro Poster Maker</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- 3. Smart PDF & Image Tools -->
+        <div class="mb-8">
+            <h3 class="section-title border-orange-500">Smart PDF & Image Tools</h3>
+            <div class="grid grid-cols-3 gap-3 md:grid-cols-4">
+                <div class="tool-card" onclick="prepareTool('JPG To PDF')">
+                    <div class="flex gap-1 mb-2">
+                        <i class="fas fa-file-image text-2xl text-blue-400"></i>
+                        <i class="fas fa-arrow-right text-xs mt-2 text-gray-400"></i>
+                        <i class="fas fa-file-pdf text-2xl text-red-500"></i>
+                    </div>
+                    <span class="text-xs font-semibold">JPG To PDF</span>
+                </div>
+                <div class="tool-card" onclick="prepareTool('PDF To JPG')">
+                    <div class="flex gap-1 mb-2">
+                        <i class="fas fa-file-pdf text-2xl text-red-500"></i>
+                        <i class="fas fa-arrow-right text-xs mt-2 text-gray-400"></i>
+                        <i class="fas fa-file-image text-2xl text-green-400"></i>
+                    </div>
+                    <span class="text-xs font-semibold">PDF To JPG</span>
+                </div>
+                <div class="tool-card" onclick="prepareTool('PNG To PDF')">
+                    <div class="flex gap-1 mb-2">
+                        <i class="fas fa-image text-2xl text-teal-500"></i>
+                        <i class="fas fa-arrow-right text-xs mt-2 text-gray-400"></i>
+                        <i class="fas fa-file-pdf text-2xl text-red-500"></i>
+                    </div>
+                    <span class="text-xs font-semibold">PNG To PDF</span>
+                </div>
+                <div class="tool-card" onclick="prepareTool('Delete PDF Page')">
+                    <i class="fas fa-file-circle-xmark text-3xl text-red-600 mb-2"></i>
+                    <span class="text-xs font-semibold">Delete PDF Page</span>
+                </div>
+                <div class="tool-card" onclick="prepareTool('Merge PDF')">
+                    <i class="fas fa-object-group text-3xl text-yellow-600 mb-2"></i>
+                    <span class="text-xs font-semibold">Merge PDF</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- 4. Card Printing Services -->
+        <div class="mb-8">
+            <h3 class="section-title border-teal-500">Card Printing Services</h3>
+            <div class="grid grid-cols-3 gap-3 md:grid-cols-4">
+                <div class="tool-card" onclick="prepareTool('Unique ID Card Print')">
+                    <span class="status-dot dot-red"></span>
+                    <i class="fas fa-fingerprint text-3xl text-orange-400 mb-2"></i>
+                    <span class="text-xs font-semibold">Unique ID Card Print</span>
+                </div>
+                <div class="tool-card" onclick="prepareTool('Election Card Print')">
+                    <i class="fas fa-vote-yea text-3xl text-gray-500 mb-2"></i>
+                    <span class="text-xs font-semibold leading-tight mt-1">Election Card Print</span>
+                </div>
+                <div class="tool-card" onclick="prepareTool('Health Plan Card')">
+                    <span class="status-dot dot-green"></span>
+                    <i class="fas fa-notes-medical text-3xl text-red-500 mb-2"></i>
+                    <span class="text-xs font-semibold leading-tight mt-1">Health Plan Card</span>
+                </div>
+                <div class="tool-card" onclick="prepareTool('Tax Id Card Print')">
+                    <i class="fas fa-file-invoice-dollar text-3xl text-blue-500 mb-2"></i>
+                    <span class="text-xs font-semibold leading-tight mt-1">Tax Id Card Print</span>
+                </div>
+                <div class="tool-card" onclick="prepareTool('Driving Permit Print')">
+                    <i class="fas fa-id-card-clip text-3xl text-gray-600 mb-2"></i>
+                    <span class="text-xs font-semibold leading-tight mt-1">Driving Permit Print</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- 5. Portal Service (Gov Links) -->
+        <div class="mb-8">
+            <h3 class="section-title border-purple-800">Portal Service</h3>
+            <div class="grid grid-cols-3 gap-3 md:grid-cols-4">
+                <a href="#" class="tool-card text-decoration-none">
+                    <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/5/55/Emblem_of_India.svg/1200px-Emblem_of_India.svg.png" class="h-8 mb-2 object-contain opacity-80">
+                    <span class="text-[10px] font-semibold leading-tight mt-1">Census Of India</span>
+                </a>
+                <a href="#" class="tool-card text-decoration-none">
+                    <i class="fas fa-fingerprint text-3xl text-blue-800 mb-2"></i>
+                    <span class="text-[10px] font-semibold">Aadhar Beta Service</span>
+                </a>
+                <a href="#" class="tool-card text-decoration-none">
+                    <i class="fas fa-download text-3xl text-blue-600 mb-2"></i>
+                    <span class="text-[10px] font-semibold leading-tight mt-1">Aadhaar Information</span>
+                </a>
+                <a href="#" class="tool-card text-decoration-none">
+                    <i class="fas fa-address-card text-3xl text-blue-400 mb-2"></i>
+                    <span class="text-[10px] font-semibold">PAN Card Service</span>
+                </a>
+                <a href="#" class="tool-card text-decoration-none">
+                    <i class="fas fa-users text-3xl text-orange-500 mb-2"></i>
+                    <span class="text-[10px] font-semibold leading-tight mt-1">Voter ID Correction</span>
+                </a>
+                <a href="#" class="tool-card text-decoration-none">
+                    <i class="fas fa-heartbeat text-3xl text-green-600 mb-2"></i>
+                    <span class="text-[10px] font-semibold">Ayushman Bharat</span>
+                </a>
+                <a href="#" class="tool-card text-decoration-none">
+                    <i class="fas fa-car text-3xl text-gray-700 mb-2"></i>
+                    <span class="text-[10px] font-semibold leading-tight mt-1">Driving Licence Service</span>
+                </a>
+                <a href="#" class="tool-card text-decoration-none">
+                    <i class="fas fa-clipboard-list text-3xl text-yellow-600 mb-2"></i>
+                    <span class="text-[10px] font-semibold">RC Service</span>
+                </a>
+                <!-- Add as many as needed following this same structure -->
+            </div>
+        </div>
+    </main>
+
+    <!-- Floating WhatsApp Button -->
+    <a href="#" class="fixed bottom-6 right-6 bg-green-500 text-white rounded-full w-14 h-14 flex items-center justify-center text-3xl shadow-lg hover:bg-green-600 transition-colors z-50">
+        <i class="fab fa-whatsapp"></i>
+        <span class="absolute -top-2 -left-2 bg-white text-green-600 text-[10px] font-bold px-2 py-1 rounded-full shadow-sm border border-green-200">Help</span>
     </a>
-    <nav class="topnav">
-      <a href="index.html" class="active">Home</a>
-      <a href="smart-documents.html">Smart Documents Print</a>
-      <a href="quick-photo.html">Quick Photo Print</a>
-    </nav>
-  </div>
-</div>
 
-<div class="shell">
-  <section class="hero">
-    <div class="hero-grid">
-      <div>
-        <div class="reg-row">
-          <span class="reg-dot c"></span><span class="reg-dot m"></span><span class="reg-dot y"></span><span class="reg-dot k"></span>
+    <!-- Modal Popup for Tools -->
+    <div id="toolModal" class="fixed inset-0 bg-black bg-opacity-60 hidden z-[100] flex items-center justify-center p-4 backdrop-blur-sm transition-opacity">
+        <div class="bg-white rounded-2xl w-full max-w-sm p-6 relative shadow-2xl transform scale-95 transition-transform" id="modalContent">
+            <button onclick="closeToolModal()" class="absolute top-4 right-4 text-gray-400 hover:text-red-500 text-xl"><i class="fas fa-times-circle"></i></button>
+            <div class="text-center">
+                <div class="bg-blue-100 text-blue-600 w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4 text-3xl">
+                    <i class="fas fa-code"></i>
+                </div>
+                <h2 id="modalTitle" class="text-xl font-bold text-gray-800 mb-2">Tool Name</h2>
+                <p class="text-sm text-gray-600 mb-6">HTML Framework is ready! Is tool ka backend/JavaScript logic abhi add karna baaki hai.</p>
+                <button onclick="closeToolModal()" class="w-full bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 px-4 rounded-xl transition-colors">
+                    Okay, Understood
+                </button>
+            </div>
         </div>
-        <h1>Crooked scan in. Straight A4 sheet out.</h1>
-        <p class="lede">Upload or click a photo of your Aadhar, PAN, Voter ID or a passport-size photo. Adp-Printflow-ai auto-detects the edges, straightens the skew, and lays everything out on an A4 page ready to print, save as PDF, or download as JPEG.</p>
-        <div class="btn-row">
-          <a href="smart-documents.html" class="btn">Open Smart Documents Print</a>
-          <a href="quick-photo.html" class="btn secondary">Open Quick Photo Print</a>
-        </div>
-      </div>
-      <div class="crop-frame">
-        <span class="cm-tr"></span><span class="cm-br"></span>
-        <div class="hero-mock">
-          <div class="mock-skew" title="uploaded — skewed"></div>
-          <div class="mock-arrow">→</div>
-          <div class="mock-a4">
-            <div class="mock-card"></div><div class="mock-card"></div>
-            <div class="mock-card"></div><div class="mock-card"></div>
-            <div class="mock-card"></div><div class="mock-card"></div>
-          </div>
-        </div>
-      </div>
     </div>
-  </section>
 
-  <section>
-    <div class="eyebrow">Choose a tool</div>
-    <div class="tools-grid">
-      <a href="smart-documents.html" class="tool-card">
-        <div class="tc-icon">ID</div>
-        <h3>Smart Documents Print</h3>
-        <p>Auto-crop and de-skew Aadhar, PAN, Voter ID or any custom-size document, then auto-arrange side by side on A4 — as fixed-size ID cards or mixed-size documents. Export PDF, JPEG or print directly.</p>
-        <div class="tc-go">Smart ID Print · Smart Documents Print →</div>
-      </a>
-      <a href="quick-photo.html" class="tool-card">
-        <div class="tc-icon">PP</div>
-        <h3>Quick Photo Print</h3>
-        <p>Upload or click a passport-size photo. Auto-layout on A4, six photos to a row — choose 6, 12 or 18 to a page. Export PDF, JPEG or print directly.</p>
-        <div class="tc-go">6 · 12 · 18 per page →</div>
-      </a>
-    </div>
-  </section>
-</div>
+    <script>
+        // Modal Logic for handling clicks on tools
+        function prepareTool(toolName) {
+            const modal = document.getElementById('toolModal');
+            const title = document.getElementById('modalTitle');
+            const modalContent = document.getElementById('modalContent');
+            
+            title.innerText = toolName;
+            modal.classList.remove('hidden');
+            
+            // Small animation effect
+            setTimeout(() => {
+                modalContent.classList.remove('scale-95');
+                modalContent.classList.add('scale-100');
+            }, 10);
+        }
 
-<footer>
-  <div class="shell">
-    <span>Adp-Printflow-ai</span>
-    <span>Runs entirely in your browser — nothing is uploaded to a server</span>
-  </div>
-</footer>
-
-<div id="printArea" style="display:none"></div>
+        function closeToolModal() {
+            const modal = document.getElementById('toolModal');
+            const modalContent = document.getElementById('modalContent');
+            
+            modalContent.classList.remove('scale-100');
+            modalContent.classList.add('scale-95');
+            
+            setTimeout(() => {
+                modal.classList.add('hidden');
+            }, 150);
+        }
+    </script>
 </body>
 </html>
