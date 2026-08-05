@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Adp-Printflow-ai — Auto-layout ID cards & photos for A4 print</title>
+<link rel="stylesheet" href="assets/css/style.css">
+</head>
+<body>
+
+<div class="topbar">
+  <div class="shell topbar-inner">
+    <a href="index.html" class="brand">
+      <span class="brand-mark">Adp-Printflow<span>-ai</span></span>
+      <span class="brand-tag">/ print layout studio</span>
+    </a>
+    <nav class="topnav">
+      <a href="index.html" class="active">Home</a>
+      <a href="smart-documents.html">Smart Documents Print</a>
+      <a href="quick-photo.html">Quick Photo Print</a>
+    </nav>
+  </div>
+</div>
+
+<div class="shell">
+  <section class="hero">
+    <div class="hero-grid">
+      <div>
+        <div class="reg-row">
+          <span class="reg-dot c"></span><span class="reg-dot m"></span><span class="reg-dot y"></span><span class="reg-dot k"></span>
+        </div>
+        <h1>Crooked scan in. Straight A4 sheet out.</h1>
+        <p class="lede">Upload or click a photo of your Aadhar, PAN, Voter ID or a passport-size photo. Adp-Printflow-ai auto-detects the edges, straightens the skew, and lays everything out on an A4 page ready to print, save as PDF, or download as JPEG.</p>
+        <div class="btn-row">
+          <a href="smart-documents.html" class="btn">Open Smart Documents Print</a>
+          <a href="quick-photo.html" class="btn secondary">Open Quick Photo Print</a>
+        </div>
+      </div>
+      <div class="crop-frame">
+        <span class="cm-tr"></span><span class="cm-br"></span>
+        <div class="hero-mock">
+          <div class="mock-skew" title="uploaded — skewed"></div>
+          <div class="mock-arrow">→</div>
+          <div class="mock-a4">
+            <div class="mock-card"></div><div class="mock-card"></div>
+            <div class="mock-card"></div><div class="mock-card"></div>
+            <div class="mock-card"></div><div class="mock-card"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section>
+    <div class="eyebrow">Choose a tool</div>
+    <div class="tools-grid">
+      <a href="smart-documents.html" class="tool-card">
+        <div class="tc-icon">ID</div>
+        <h3>Smart Documents Print</h3>
+        <p>Auto-crop and de-skew Aadhar, PAN, Voter ID or any custom-size document, then auto-arrange side by side on A4 — as fixed-size ID cards or mixed-size documents. Export PDF, JPEG or print directly.</p>
+        <div class="tc-go">Smart ID Print · Smart Documents Print →</div>
+      </a>
+      <a href="quick-photo.html" class="tool-card">
+        <div class="tc-icon">PP</div>
+        <h3>Quick Photo Print</h3>
+        <p>Upload or click a passport-size photo. Auto-layout on A4, six photos to a row — choose 6, 12 or 18 to a page. Export PDF, JPEG or print directly.</p>
+        <div class="tc-go">6 · 12 · 18 per page →</div>
+      </a>
+    </div>
+  </section>
+</div>
+
+<footer>
+  <div class="shell">
+    <span>Adp-Printflow-ai</span>
+    <span>Runs entirely in your browser — nothing is uploaded to a server</span>
+  </div>
+</footer>
+
+<div id="printArea" style="display:none"></div>
+</body>
+</html>

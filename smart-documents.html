@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Smart Documents Print — Adp-Printflow-ai</title>
+<link rel="stylesheet" href="assets/css/style.css">
+</head>
+<body>
+
+<div class="topbar">
+  <div class="shell topbar-inner">
+    <a href="index.html" class="brand">
+      <span class="brand-mark">Adp-Printflow<span>-ai</span></span>
+      <span class="brand-tag">/ print layout studio</span>
+    </a>
+    <nav class="topnav">
+      <a href="index.html">Home</a>
+      <a href="smart-documents.html" class="active">Smart Documents Print</a>
+      <a href="quick-photo.html">Quick Photo Print</a>
+    </nav>
+  </div>
+</div>
+
+<div class="shell">
+  <div style="padding-top:26px;">
+    <div class="eyebrow">Tool</div>
+    <h1 style="font-size:26px;">Smart Documents Print</h1>
+    <p class="hint" style="max-width:60ch;">Add Aadhar, PAN, Voter ID or any document. Edges are auto-detected and straightened automatically — drag the pink corner handles if a scan needs fine-tuning, then generate the A4 layout.</p>
+  </div>
+
+  <div class="workspace">
+    <!-- LEFT: controls -->
+    <div>
+      <div class="panel">
+        <h3>Mode</h3>
+        <div class="seg" id="modeSeg">
+          <button class="active" data-mode="id">Smart ID Print</button>
+          <button data-mode="mixed">Smart Documents Print</button>
+        </div>
+        <p class="hint" style="margin-top:10px;" id="modeHint">All documents printed at one fixed card size, packed edge to edge on A4.</p>
+      </div>
+
+      <div class="panel" id="typePanel">
+        <h3>Card / Document Type</h3>
+        <div class="field">
+          <label>Applies to all documents</label>
+          <select id="globalType">
+            <option value="aadhar">Aadhar Card (85.6 × 54 mm)</option>
+            <option value="pan">PAN Card (85.6 × 54 mm)</option>
+            <option value="voter">Voter ID Card (85.6 × 54 mm)</option>
+            <option value="custom">Custom size…</option>
+          </select>
+        </div>
+        <div class="field" id="customSizeFields" style="display:none;">
+          <label>Width × Height (mm)</label>
+          <div style="display:flex; gap:8px;">
+            <input type="number" id="customW" value="90" min="10" max="200">
+            <input type="number" id="customH" value="60" min="10" max="200">
+          </div>
+        </div>
+      </div>
+
+      <div class="panel">
+        <h3>Add Documents</h3>
+        <div class="dropzone" id="dropzone">
+          <div class="dz-title">Click to upload</div>
+          <div class="dz-sub">or drag & drop · JPG / PNG · multiple files ok</div>
+        </div>
+        <input type="file" id="fileInput" accept="image/*" multiple style="display:none;">
+        <div class="btn-row" style="margin-top:10px;">
+          <button class="btn secondary small" id="cameraBtn" style="flex:1;">📷 Use Camera</button>
+        </div>
+        <div class="status-bar">
+          <span class="dot-pulse" id="cvDot"></span>
+          <span id="cvStatus">Loading edge-detection engine…</span>
+        </div>
+      </div>
+
+      <div class="panel" id="listPanel" style="display:none;">
+        <h3>Documents (<span id="docCount">0</span>)</h3>
+        <div class="doc-list" id="docList"></div>
+      </div>
+
+      <div class="panel">
+        <h3>Output</h3>
+        <div class="field">
+          <label>Print quality</label>
+          <select id="dpiSelect">
+            <option value="200">Draft — 200 DPI</option>
+            <option value="300" selected>Standard — 300 DPI</option>
+          </select>
+        </div>
+        <button class="btn" id="generateBtn" style="width:100%; justify-content:center;">Generate A4 Layout</button>
+      </div>
+    </div>
+
+    <!-- RIGHT: stage -->
+    <div>
+      <!-- camera view -->
+      <div class="panel" id="cameraPanel" style="display:none;">
+        <h3>Camera</h3>
+        <video id="cameraVideo" playsinline autoplay style="width:100%; border-radius:4px; background:#000;"></video>
+        <div class="btn-row" style="margin-top:10px;">
+          <button class="btn" id="captureBtn">Capture</button>
+          <button class="btn ghost" id="closeCameraBtn">Close Camera</button>
+        </div>
+      </div>
+
+      <!-- corner editor -->
+      <div class="panel" id="editorPanel" style="display:none;">
+        <h3>Adjust corners</h3>
+        <p class="hint" style="margin-bottom:12px;">Drag the four handles onto the actual corners of the document, then confirm.</p>
+        <div class="editor-wrap" id="editorWrap">
+          <canvas id="editorCanvas"></canvas>
+        </div>
+        <div class="btn-row" style="margin-top:14px;">
+          <button class="btn" id="confirmCropBtn">Confirm & Straighten</button>
+          <button class="btn ghost" id="cancelCropBtn">Cancel</button>
+        </div>
+      </div>
+
+      <!-- empty state -->
+      <div class="stage-empty" id="stageEmpty">
+        <div class="se-icon">🪪</div>
+        <div><b>No documents yet</b></div>
+        <div class="hint">Upload or capture a document on the left to begin.</div>
+      </div>
+
+      <!-- generated pages -->
+      <div class="pages" id="pages" style="display:none;"></div>
+      <div class="btn-row" id="exportRow" style="display:none; margin-top:16px;">
+        <button class="btn" id="dlPdfBtn">Download PDF</button>
+        <button class="btn secondary" id="dlJpegBtn">Download JPEG</button>
+        <button class="btn ghost" id="printBtn">Print</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<footer>
+  <div class="shell">
+    <span>Adp-Printflow-ai</span>
+    <span>Runs entirely in your browser — nothing is uploaded to a server</span>
+  </div>
+</footer>
+
+<div id="printArea" style="display:none"></div>
+
+<script src="assets/js/common.js"></script>
+<script src="assets/js/smart-documents.js"></script>
+</body>
+</html>
